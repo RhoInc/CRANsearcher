@@ -1,0 +1,4 @@
+Name: CRANsearcher
+Description: Search packages in CRAN database based on keywords
+Binding: CRANsearcher
+Interactive: true

@@ -1,0 +1,21 @@
+Package: CRANsearcher
+Title: Rstudio addin for searching packages in CRAN database based on keywords
+Version: 0.0.0.9000
+Authors@R: c(
+           person("Agustin", "Calatroni", email = "agustin_calatroni@rhoworld.com", role = c("cre","aut")),
+           person("Becca", "Krouse", email = "rebecca_krouse@rhoworld.com", role = c("aut"))
+           )
+Maintainer: Becca Krouse <rebecca_krouse@rhoworld.com>
+Description: What the package does (one paragraph).
+Depends: R (>= 3.3.0)
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports: 
+  dplyr,
+  shiny,
+  shinyjs,
+  miniUI, 
+  stringr
+Suggests: DT
+RoxygenNote: 6.0.1
