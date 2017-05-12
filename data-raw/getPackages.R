@@ -15,6 +15,7 @@ getPackages <- function() {
   db[, c("Package", "Version","Title","Description","Published","License")]}
 
 cran_inventory <- getPackages()
+cran_inventory <- data.frame(cran_inventory)
 
 devtools::use_data(cran_inventory)
 

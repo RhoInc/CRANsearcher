@@ -19,6 +19,7 @@ getPackages <- function() {
 #'
 #' Addin for searching packages in CRAN database based on keywords
 #' @import dplyr
+#' @importFrom curl has_internet
 #' @import shiny
 #' @import miniUI
 #' @importFrom shinyjs hide useShinyjs
@@ -82,7 +83,6 @@ CRANsearcher <- function(){
                   )
     } else {
       crandb$a <- cran_inventory %>%
-        data.frame %>%
         mutate(name = Package %>% as.character,
                Package = paste0('<a href="','http://www.rpackages.io/package/',Package,'">',Package,'</a>',
                                 '<sub> <a href="','http://rdrr.io/cran/',Package,'">',2,'</a></sub>')
@@ -129,7 +129,7 @@ CRANsearcher <- function(){
                         extensions = c('Scroller','Buttons'),
                         options= list(dom = 'Btip',
                                       scrollX=FALSE,
-                                      scrollY=FALSE,
+                                      scrollY=TRUE,
                                       buttons = I('colvis')))
         } else{
           return()
