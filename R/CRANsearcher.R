@@ -35,7 +35,7 @@ CRANsearcher <- function(){
     div(
       id = "loading-content",
       h2("Loading CRAN package database..."),
-      style = "text-align: center;
+      style = "text-align: left;
                 position: absolute;
                 background: #000000;
                 opacity: 0.3;
@@ -43,7 +43,6 @@ CRANsearcher <- function(){
                 right: 0;
                 top: 50px;
                 height: 100%;
-                text-align: center;
                 color: #FFFFFF;"
                     ),
 
@@ -52,12 +51,14 @@ CRANsearcher <- function(){
                    right = miniTitleBarButton("done", "Install selected package(s)", primary = TRUE)),
     miniContentPanel(
       fillCol(
-        flex=c(1,6,0.5),
-        textInput("search","Enter search terms separated by commas (e.g. latent class, longitudinal)"),
-        div(DT::dataTableOutput("table"), style = "font-size: 90%"),
+        flex=c(1,6),
         fillRow(
-          div(textOutput("n"), style = "font-weight: bold")
-          )
+          flex=c(1,1),
+          div(textOutput("n"), style = "font-weight: bold"),
+          textInput("search","Enter search terms separated by commas (e.g. latent class, longitudinal)", width="140%")
+
+        ),
+        div(DT::dataTableOutput("table"), style = "font-size: 90%")
       )
     )
   )
@@ -118,7 +119,21 @@ CRANsearcher <- function(){
     output$table <- DT::renderDataTable({
 
       if(nchar(input$search)<3){
-        return()
+        if(!is.null(crandb$a)){
+          DT::datatable(crandb$a[c(1:10),-7],
+                        rownames = FALSE,
+                        escape = FALSE,
+                        style="bootstrap",
+                        class='compact stripe hover row-border order-column',
+                        selection="multiple",
+                        extensions = c('Scroller','Buttons'),
+                        options= list(dom = 'Btip',
+                                      scrollX=FALSE,
+                                      scrollY=FALSE,
+                                      buttons = I('colvis')))
+        } else{
+          return()
+        }
       } else{
         DT::datatable(a_sub()[,-7],
                        rownames = FALSE,
@@ -129,7 +144,8 @@ CRANsearcher <- function(){
                        extensions = c('Scroller','Buttons'),
                        options= list(dom = 'Btip',
                                      scrollX=FALSE,
-                                     scrollY=450,
+                                  #   scrollY=450,
+                                  scrollY=FALSE,
                                      buttons = I('colvis')))
       }
     })
@@ -138,7 +154,7 @@ CRANsearcher <- function(){
 
       if(nchar(input$search)<3){
         if (!is.null(crandb$a)){
-          paste("There are",dim(crandb$a)[1],"packages on CRAN.")
+          paste("There are",dim(crandb$a)[1],"packages on CRAN. Displaying first 10.")
         } else{
           paste("")
         }
@@ -155,7 +171,6 @@ CRANsearcher <- function(){
 
     observeEvent(input$done, {
       rows_selected = input$table_rows_selected
-     # select = rows_selected[!(rows_selected %in% installed)]
       for (i in rows_selected){
         install.packages(a_sub()[rows_selected,"name"])
       }
