@@ -8,6 +8,6 @@ One of the strengths of R is its vast [package ecosystem](https://cran.r-project
 ```devtools::install_github("RhoInc/CRANsearcher")```
 
 # Use
-After installation, the add-in will be available in your Rstudio add-in dropdown menu.  Simple select "CRANsearcher" from the menu to run the application.  
+After installation, the add-in will be available in your Rstudio add-in dropdown menu.  Simply select "CRANsearcher" from the menu to run the application.  
 
 ![](/inst/image/CRANsearcher_addin.gif)
