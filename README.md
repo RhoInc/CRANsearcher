@@ -10,5 +10,4 @@ One of the strengths of R is its vast [package ecosystem](https://cran.r-project
 # Use
 After installation, the add-in will be available in your Rstudio add-in dropdown menu.  Simple select "CRANsearcher" from the menu to run the application.  
 
-![](/inst/image/addin_img.png?raw=true )
 ![](/inst/image/CRANsearcher_addin.gif)
