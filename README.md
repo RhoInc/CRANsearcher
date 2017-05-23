@@ -11,3 +11,7 @@ One of the strengths of R is its vast [package ecosystem](https://cran.r-project
 After installation, the add-in will be available in your Rstudio add-in dropdown menu.  Simply select "CRANsearcher" from the menu to run the application.  
 
 ![](/inst/image/CRANsearcher_addin.gif)
+
+# Inspiration
+
+Ideas behind this addin are inspired by Dean Attali's (addinslist)[https://github.com/daattali/addinslist] and Mikhail Popov's taskviewr Shiny [app](https://github.com/bearloga/taskviewr). 
