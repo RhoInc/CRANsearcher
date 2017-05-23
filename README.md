@@ -13,3 +13,9 @@ After installation, the add-in will be available in your Rstudio add-in dropdown
 ![](/inst/image/CRANsearcher_addin.gif)
 
 
+# Inspiration
+
+We must acknowledge a few great resources that helped inspire ideas behind this add-in:
+- Code [snippet](https://stackoverflow.com/questions/11560865/list-and-description-of-all-packages-in-cran-from-within-r) for querying CRAN database
+- Dean Attali's [addinslist](https://github.com/daattali/addinslist) and Colin Gillespie's [addinmanager](https://github.com/csgillespie/addinmanager)
+- Mikhail Popov's taskviewr Shiny [app](https://github.com/bearloga/taskviewr)
