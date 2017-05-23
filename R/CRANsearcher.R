@@ -24,7 +24,6 @@ getPackages <- function() {
 #' @import miniUI
 #' @importFrom shinyjs hide useShinyjs
 #' @importFrom stringr str_detect
-#' @import DT
 #'
 #' @export
 CRANsearcher <- function(){
@@ -33,7 +32,7 @@ CRANsearcher <- function(){
 
     shinyjs::useShinyjs(),
 
-    # Loading message
+    # Loading messageC
     div(
       id = "loading-content",
       h2("Loading CRAN package database..."),
