@@ -47,7 +47,7 @@ CRANsearcher <- function(){
                 color: #FFFFFF;"
                     ),
 
-    gadgetTitleBar(a(href="https://github.com/agstn/CRANsearcher", "CRAN Package Searcher"),
+    gadgetTitleBar(a(href="https://github.com/RhoInc/CRANsearcher", "CRAN Package Searcher"),
                    left = miniTitleBarCancelButton(),
                    right = miniTitleBarButton("done", "Install selected package(s)", primary = TRUE)),
     miniContentPanel(
