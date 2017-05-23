@@ -170,9 +170,9 @@ CRANsearcher <- function(){
     })
 
 
-    observe({
-      print(input$table_rows_selected)
-    })
+   # observe({
+   #   print(input$table_rows_selected)
+   # })
 
 
     observeEvent(input$install, {
