@@ -32,7 +32,7 @@ CRANsearcher <- function(){
 
     shinyjs::useShinyjs(),
 
-    # Loading messageC
+    # Loading message
     div(
       id = "loading-content",
       h2("Loading CRAN package database..."),
