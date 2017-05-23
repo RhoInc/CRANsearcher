@@ -14,4 +14,4 @@ After installation, the add-in will be available in your Rstudio add-in dropdown
 
 # Inspiration
 
-Ideas behind this addin are inspired by Dean Attali's (addinslist)[https://github.com/daattali/addinslist] and Mikhail Popov's taskviewr Shiny [app](https://github.com/bearloga/taskviewr). 
+Ideas behind this addin are inspired by Dean Attali's [addinslist](https://github.com/daattali/addinslist) and Mikhail Popov's taskviewr Shiny [app](https://github.com/bearloga/taskviewr). 
