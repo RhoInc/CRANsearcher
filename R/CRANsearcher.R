@@ -24,6 +24,7 @@ getPackages <- function() {
 #' @import miniUI
 #' @importFrom shinyjs hide useShinyjs
 #' @importFrom stringr str_detect
+#' @import DT
 #'
 #' @export
 CRANsearcher <- function(){
@@ -49,7 +50,7 @@ CRANsearcher <- function(){
 
     gadgetTitleBar(a(href="https://github.com/RhoInc/CRANsearcher", "CRAN Package Searcher"),
                    left = miniTitleBarCancelButton(),
-                   right = miniTitleBarButton("done", "Install selected package(s)", primary = TRUE)),
+                   right = miniTitleBarButton("install", "Install selected package(s)", primary = TRUE)),
     miniContentPanel(
       fillCol(
         flex=c(1,6),
@@ -169,12 +170,15 @@ CRANsearcher <- function(){
     })
 
 
-    observeEvent(input$done, {
-      rows_selected = input$table_rows_selected
-      for (i in rows_selected){
-        install.packages(a_sub()[rows_selected,"name"])
-      }
+    observe({
+      print(input$table_rows_selected)
+    })
 
+
+    observeEvent(input$install, {
+      rows <- input$table_rows_selected
+      pkgs <- as.vector(a_sub()[rows, "name"])
+      install.packages(pkgs)
       stopApp()
     })
   }
