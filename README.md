@@ -1,4 +1,4 @@
-# CRANsearcher <img src="man/figures/CRANsearcher_hexSticker.png" align="right" />
+# CRANsearcher <img src="CRANsearcher/man/figure/CRANsearcher_hexSticker.png" align="right" />
 RStudio addin to search CRAN packages titles and descriptions
 
 # About 
