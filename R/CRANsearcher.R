@@ -48,7 +48,7 @@ CRANsearcher <- function(){
                     ),
 
     gadgetTitleBar(a(href="https://github.com/RhoInc/CRANsearcher", "CRAN Package Searcher"),
-                   left = miniTitleBarCancelButton(),
+                   left = miniTitleBarCancelButton("close","Close"),
                    right = miniTitleBarButton("install", "Install selected package(s)", primary = TRUE)),
     miniContentPanel(
       fillCol(
@@ -178,6 +178,9 @@ CRANsearcher <- function(){
       rows <- input$table_rows_selected
       pkgs <- as.vector(a_sub()[rows, "name"])
       install.packages(pkgs)
+    })
+
+    observeEvent(input$close,{
       stopApp()
     })
   }
