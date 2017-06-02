@@ -29,27 +29,21 @@ getPackages <- function() {
 CRANsearcher <- function(){
 
   ui <- miniPage(
-
     shinyjs::useShinyjs(),
 
     # Loading message
     div(
       id = "loading-content",
       h2("Loading CRAN package database..."),
-      style = "text-align: left;
-                position: absolute;
-                background: #000000;
-                opacity: 0.3;
-                left: 0;
-                right: 0;
-                top: 50px;
-                height: 100%;
-                color: #FFFFFF;"
-                    ),
+      style = "margin: auto;
+      position: absolute;
+      top: 35%;
+      left: 30%;
+      text-align: left;"),
 
     gadgetTitleBar(a(href="https://github.com/RhoInc/CRANsearcher", "CRAN Package Searcher"),
                    left = miniTitleBarCancelButton("close","Close"),
-                   right = miniTitleBarButton("install", "Install selected package(s)", primary = TRUE)),
+                   right = uiOutput("install")),
     miniContentPanel(
       fillCol(
         flex=c(1,6),
@@ -62,6 +56,7 @@ CRANsearcher <- function(){
         div(DT::dataTableOutput("table"), style = "font-size: 90%")
       )
     )
+
   )
 
 
@@ -73,7 +68,7 @@ CRANsearcher <- function(){
       shinyjs::hide(id = "loading-content", anim = TRUE, animType = "fade")
     })
 
-    ## determine if internet access & manage data
+    # determine if internet access & manage data
     if(curl::has_internet()){
       crandb$a <- getPackages() %>%
             data.frame %>%
@@ -82,7 +77,7 @@ CRANsearcher <- function(){
                                    '<sub> <a href="','http://rdrr.io/cran/',Package,'">',2,'</a></sub>')
                   )
     } else {
-      crandb$a <- cran_inventory %>%
+      crandb$a <- CRANsearcher::cran_inventory %>%
         mutate(name = Package %>% as.character,
                Package = paste0('<a href="','http://www.rpackages.io/package/',Package,'">',Package,'</a>',
                                 '<sub> <a href="','http://rdrr.io/cran/',Package,'">',2,'</a></sub>')
@@ -126,10 +121,8 @@ CRANsearcher <- function(){
                         style="bootstrap",
                         class='compact stripe hover row-border order-column',
                         selection="multiple",
-                        extensions = c('Scroller','Buttons'),
+                        extensions = "Buttons",
                         options= list(dom = 'Btip',
-                                      scrollX=FALSE,
-                                      scrollY=TRUE,
                                       buttons = I('colvis')))
         } else{
           return()
@@ -141,11 +134,8 @@ CRANsearcher <- function(){
                        style="bootstrap",
                        class='compact stripe hover row-border order-column',
                        selection="multiple",
-                       extensions = c('Scroller','Buttons'),
+                       extensions = "Buttons",
                        options= list(dom = 'Btip',
-                                     scrollX=FALSE,
-                                  #   scrollY=450,
-                                  scrollY=FALSE,
                                      buttons = I('colvis')))
       }
     })
@@ -173,6 +163,14 @@ CRANsearcher <- function(){
    #   print(input$table_rows_selected)
    # })
 
+
+   output$install <- renderUI({
+     if (!is.null(input$table_rows_selected)){
+       miniTitleBarButton("install", "Install selected package(s)", primary=TRUE)
+     } else{
+       miniTitleBarButton("install", "Install selected package(s)")
+     }
+   })
 
     observeEvent(input$install, {
       rows <- input$table_rows_selected
