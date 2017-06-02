@@ -18,5 +18,6 @@ Imports:
   shinyjs,
   miniUI, 
   stringr,
-  DT
+  DT,
+  lubridate
 RoxygenNote: 6.0.1
