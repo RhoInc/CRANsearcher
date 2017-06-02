@@ -8,4 +8,4 @@ sticker(img,
         s_x=1, s_y=1.2,  # position
         s_width=0.95, s_height=1.1,
         h_fill = "white", h_color="#4E94B5", p_color = "#4E94B5",
-        filename="man/figure/CRANsearcher_hexSticker.png")
+        filename="inst/image/hex/CRANsearcher_hexSticker.png")

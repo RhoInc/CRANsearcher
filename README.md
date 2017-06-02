@@ -1,4 +1,4 @@
-# CRANsearcher <img src="man/figure/CRANsearcher_hexSticker.png" width = "175" height = "200" align="right" /> 
+# CRANsearcher <img src="inst/image/hex/CRANsearcher_hexSticker.png" width = "175" height = "200" align="right" /> 
 RStudio addin to search CRAN packages titles and descriptions
 
 # About 
@@ -10,7 +10,7 @@ One of the strengths of R is its vast [package ecosystem](https://cran.r-project
 # Use
 After installation, the add-in will be available in your Rstudio add-in dropdown menu.  Simply select "CRANsearcher" from the menu to run the application.  
 
-![](/inst/image/CRANsearcher_addin.gif)
+![](inst/image/gif/CRANsearcher_addin.gif)
 
 
 # Inspiration
