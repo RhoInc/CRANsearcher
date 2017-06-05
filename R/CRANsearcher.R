@@ -4,7 +4,8 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(".", "Package","Publishe
 
 ## function to get packages
 getPackages <- function() {
-  description <- sprintf("%s/web/packages/packages.rds", getOption("repos")[[1]])
+  repo <- ifelse(is.na(getOption("repos")["CRAN"]), getOption("repos")[[1]], getOption("repos")["CRAN"])
+  description <- sprintf("%s/web/packages/packages.rds", repo)
   con <- if(substring(description, 1L, 7L) == "file://") {
     file(description, "rb")
   } else {
