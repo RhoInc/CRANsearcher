@@ -1,8 +1,10 @@
+# for R CMD check NOTE about global vars
+if(getRversion() >= "2.15.1")  utils::globalVariables(c(".", "Package","Published","name",
+                                                        "Title","Description","term","months_since"))
 
 ## function to get packages
 getPackages <- function() {
-  contrib.url(getOption("repos")["CRAN"], "source")
-  description <- sprintf("%s/web/packages/packages.rds", getOption("repos")["CRAN"])
+  description <- sprintf("%s/web/packages/packages.rds", getOption("repos")[[1]])
   con <- if(substring(description, 1L, 7L) == "file://") {
     file(description, "rb")
   } else {
@@ -25,6 +27,7 @@ getPackages <- function() {
 #' @importFrom lubridate interval
 #' @importFrom shinyjs hide useShinyjs
 #' @importFrom stringr str_detect
+#' @importFrom utils contrib.url install.packages
 #'
 #' @export
 CRANsearcher <- function(){
@@ -224,7 +227,7 @@ CRANsearcher <- function(){
     observeEvent(input$install, {
       rows <- input$table_rows_selected
       pkgs <- as.vector(a_sub2()[rows, "name"])
-      install.packages(pkgs)
+      utils::install.packages(pkgs)
     })
 
     observeEvent(input$close,{
