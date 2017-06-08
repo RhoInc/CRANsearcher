@@ -1,8 +1,11 @@
+# for R CMD check NOTE about global vars
+if(getRversion() >= "2.15.1")  utils::globalVariables(c(".", "Package","Published","name",
+                                                        "Title","Description","term","months_since"))
 
 ## function to get packages
 getPackages <- function() {
-  contrib.url(getOption("repos")["CRAN"], "source")
-  description <- sprintf("%s/web/packages/packages.rds", getOption("repos")["CRAN"])
+  repo <- ifelse(is.na(getOption("repos")["CRAN"]), getOption("repos")[[1]], getOption("repos")["CRAN"])
+  description <- sprintf("%s/web/packages/packages.rds", repo)
   con <- if(substring(description, 1L, 7L) == "file://") {
     file(description, "rb")
   } else {
@@ -22,8 +25,10 @@ getPackages <- function() {
 #' @importFrom curl has_internet
 #' @import shiny
 #' @import miniUI
+#' @importFrom lubridate interval
 #' @importFrom shinyjs hide useShinyjs
 #' @importFrom stringr str_detect
+#' @importFrom utils contrib.url install.packages
 #'
 #' @export
 CRANsearcher <- function(){
@@ -48,13 +53,17 @@ CRANsearcher <- function(){
       fillCol(
         flex=c(1,6),
         fillRow(
-          flex=c(1,1),
-          div(textOutput("n"), style = "font-weight: bold"),
-          textInput("search","Enter search terms separated by commas (e.g. latent class, longitudinal)", width="140%")
-
+          flex=c(2,1),
+          textInput("search","Enter search terms separated by commas (e.g. latent class, longitudinal)", width="90%"),
+          selectInput("dates","Last release date range",choices=c("1 month","3 months","6 months","12 months","All time"), selected="All time", width="80%")
+        # div(textOutput("n"), style = "font-weight: bold") ,
         ),
         div(DT::dataTableOutput("table"), style = "font-size: 90%")
       )
+    ),
+    miniButtonBlock(
+      div(textOutput("n"), style = "font-weight: bold")
+     # selectInput("dates","Keep packages published in last",choices=c("6 months","12 months","All time"))
     )
 
   )
@@ -72,19 +81,38 @@ CRANsearcher <- function(){
     if(curl::has_internet()){
       crandb$a <- getPackages() %>%
             data.frame %>%
-            mutate(name = Package %>% as.character,
+            mutate(Published = as.Date(Published),
+                   months_since = lubridate::interval(Published, Sys.Date())/months(1),
+                   name = Package %>% as.character,
                   Package = paste0('<a href="','http://www.rpackages.io/package/',Package,'">',Package,'</a>',
-                                   '<sub> <a href="','http://rdrr.io/cran/',Package,'">',2,'</a></sub>')
-                  )
+                                   '<sub> <a href="','http://rdrr.io/cran/',Package,'">',2,'</a></sub>')) %>%
+           rename(`Last release`=Published)
     } else {
       crandb$a <- CRANsearcher::cran_inventory %>%
-        mutate(name = Package %>% as.character,
+        mutate(Published = as.Date(Published),
+               months_since = lubridate::interval(Published, Sys.Date())/months(1),
+               name = Package %>% as.character,
                Package = paste0('<a href="','http://www.rpackages.io/package/',Package,'">',Package,'</a>',
-                                '<sub> <a href="','http://rdrr.io/cran/',Package,'">',2,'</a></sub>')
-               )
+                                '<sub> <a href="','http://rdrr.io/cran/',Package,'">',2,'</a></sub>'))%>%
+              rename(`Last release`=Published)
     }
 
-    a_sub <- reactive({
+
+    a_sub1 <- reactive({
+
+      dat <- crandb$a
+
+      if(input$dates=="All time"){
+        return(dat)
+      } else {
+        nmos <- gsub("[^0-9\\.]", "", input$dates)
+
+        return(filter(dat, months_since < nmos))
+      }
+
+    })
+
+    a_sub2 <- reactive({
 
       search <- input$search %>%
         tolower %>%
@@ -94,7 +122,8 @@ CRANsearcher <- function(){
 
       search2 <- search[which(nchar(search) >1)]
 
-      a <- crandb$a
+    #  a <- crandb$a
+      a <- a_sub1()
 
       if(nchar(input$search)<3){
         s <- 0
@@ -115,20 +144,32 @@ CRANsearcher <- function(){
 
       if(nchar(input$search)<3){
         if(!is.null(crandb$a)){
-          DT::datatable(crandb$a[c(1:10),-7],
-                        rownames = FALSE,
-                        escape = FALSE,
-                        style="bootstrap",
-                        class='compact stripe hover row-border order-column',
-                        selection="multiple",
-                        extensions = "Buttons",
-                        options= list(dom = 'Btip',
-                                      buttons = I('colvis')))
+          if (input$dates=="All time"){
+            DT::datatable(crandb$a[c(1:10),-c(7:8)],
+                          rownames = FALSE,
+                          escape = FALSE,
+                          style="bootstrap",
+                          class='compact stripe hover row-border order-column',
+                          selection="multiple",
+                          extensions = "Buttons",
+                          options= list(dom = 'Btip',
+                                        buttons = I('colvis')))
+          } else{
+            DT::datatable(a_sub1()[,-c(7:8)],
+                          rownames = FALSE,
+                          escape = FALSE,
+                          style="bootstrap",
+                          class='compact stripe hover row-border order-column',
+                          selection="multiple",
+                          extensions = "Buttons",
+                          options= list(dom = 'Btip',
+                                        buttons = I('colvis')))
+          }
         } else{
           return()
         }
       } else{
-        DT::datatable(a_sub()[,-7],
+        DT::datatable(a_sub2()[,-c(7:8)],
                        rownames = FALSE,
                        escape = FALSE,
                        style="bootstrap",
@@ -144,16 +185,28 @@ CRANsearcher <- function(){
 
       if(nchar(input$search)<3){
         if (!is.null(crandb$a)){
-          paste("There are",dim(crandb$a)[1],"packages on CRAN. Displaying first 10.")
+          if (input$dates=="All time"){
+          paste0("There are ",dim(crandb$a)[1]," packages on CRAN. Displaying first 10.")
+          } else{
+          paste0("There are ",dim(a_sub1())[1]," packages on CRAN released within the past",input$dates,".")
+          }
         } else{
           paste("")
         }
       } else{
-        n <- dim(a_sub())[1]
-        if (n>1){
-          paste0("There are ",n," packages related to '",input$search,"' on CRAN.")
+        n <- dim(a_sub2())[1]
+        if (!n==1){
+          if (input$dates=="All time"){
+            paste0("There are ",n," packages related to '",input$search,"' on CRAN.")
+          } else {
+            paste0("There are ",n," packages related to '",input$search,"' on CRAN released within the past ",input$dates,".")
+          }
         } else {
-          paste0("There is ",n," package related to '",input$search,"' on CRAN.")
+          if (input$dates=="All time"){
+            paste0("There is ",n," package related to '",input$search,"' on CRAN.")
+          } else {
+            paste0("There is ",n," package related to '",input$search,"' on CRAN released within the past ",input$dates,".")
+          }
         }
       }
     })
@@ -174,8 +227,8 @@ CRANsearcher <- function(){
 
     observeEvent(input$install, {
       rows <- input$table_rows_selected
-      pkgs <- as.vector(a_sub()[rows, "name"])
-      install.packages(pkgs)
+      pkgs <- as.vector(a_sub2()[rows, "name"])
+      utils::install.packages(pkgs)
     })
 
     observeEvent(input$close,{
