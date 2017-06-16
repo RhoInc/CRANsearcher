@@ -84,16 +84,18 @@ CRANsearcher <- function(){
             mutate(Published = as.Date(Published),
                    months_since = lubridate::interval(Published, Sys.Date())/months(1),
                    name = Package %>% as.character,
-                  Package = paste0('<a href="','http://www.rpackages.io/package/',Package,'">',Package,'</a>',
-                                   '<sub> <a href="','http://rdrr.io/cran/',Package,'">',2,'</a></sub>')) %>%
+                  Package = paste0('<a href="','https://cran.r-project.org/web/packages/',Package,'" style="color:#000000">',Package,'</a>',
+                                   '<sub> <a href="','http://www.rpackages.io/package/',Package,'" style="color:#000000">',1,'</a></sub>',
+                                   '<sub> <a href="','http://rdrr.io/cran/',Package,'" style="color:#000000">',2,'</a></sub>')) %>%
            rename(`Last release`=Published)
     } else {
       crandb$a <- CRANsearcher::cran_inventory %>%
         mutate(Published = as.Date(Published),
                months_since = lubridate::interval(Published, Sys.Date())/months(1),
                name = Package %>% as.character,
-               Package = paste0('<a href="','http://www.rpackages.io/package/',Package,'">',Package,'</a>',
-                                '<sub> <a href="','http://rdrr.io/cran/',Package,'">',2,'</a></sub>'))%>%
+               Package =paste0('<a href="','https://cran.r-project.org/web/packages/',Package,'" style="color:#000000">',Package,'</a>',
+                               '<sub> <a href="','http://www.rpackages.io/package/',Package,'" style="color:#000000">',1,'</a></sub>',
+                               '<sub> <a href="','http://rdrr.io/cran/',Package,'" style="color:#000000">',2,'</a></sub>')) %>%
               rename(`Last release`=Published)
     }
 
