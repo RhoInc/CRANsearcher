@@ -9,3 +9,9 @@ CRANsearcher()
 \description{
 Addin for searching packages in CRAN database based on keywords
 }
+\examples{
+\dontrun{
+CRANsearcher()
+}
+
+}

@@ -31,6 +31,11 @@ getPackages <- function() {
 #' @importFrom stringr str_detect
 #' @importFrom utils contrib.url install.packages
 #'
+#' @examples
+#' \dontrun{
+#' CRANsearcher()
+#' }
+#'
 #' @export
 CRANsearcher <- function(){
 
