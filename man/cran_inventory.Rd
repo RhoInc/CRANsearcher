@@ -12,6 +12,7 @@
   \item{Description}{Description}
   \item{Published}{Published}
   \item{License}{License}
+  \item{snapshot_date}{Date that database snapshot was taken.}
  }}
 \source{
 \url{https://cran.r-project.org/web/packages/}
@@ -20,6 +21,6 @@
 cran_inventory
 }
 \description{
-Snapshot of CRAN web database inventory of packages.
+Snapshot of CRAN web database inventory of packages for use offline.
 }
 \keyword{datasets}
