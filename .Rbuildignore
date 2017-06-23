@@ -1,4 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 data-raw
-https://github.com/RhoInc/CRANsearcher/tree/master/inst/image/gif/CRANsearcher_addin.gif
+^\.travis\.yml$
+inst/image
+README.md
