@@ -4,3 +4,4 @@ data-raw
 ^\.travis\.yml$
 inst/image
 README.md
+^cran-comments\.md$
