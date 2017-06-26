@@ -1,4 +1,3 @@
-#library(tools)
 library(dplyr)
 
 getPackages <- function() {

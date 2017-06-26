@@ -13,5 +13,5 @@
 #'   \item{snapshot_date}{Date that database snapshot was taken.}
 #'  }
 #'
-#' @source \url{https://CRAN.R-project.org/web/packages/}
+#' @source \url{https://cran.r-project.org/web/packages/}
 "cran_inventory"
