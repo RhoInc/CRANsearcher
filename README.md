@@ -1,4 +1,5 @@
-[![Travis-CI Build Status](https://travis-ci.org/RhoInc/CRANsearcher.svg?branch=master)](https://travis-ci.org/RhoInc/CRANsearcher)
+![Travis-CI Build Status](https://travis-ci.org/RhoInc/CRANsearcher.svg?branch=master)](https://travis-ci.org/RhoInc/CRANsearcher)
+![cran](http://www.r-pkg.org/badges/version/CRANsearcher)
 
 # CRANsearcher <img src="inst/image/hex/CRANsearcher_hexSticker.png" width = "175" height = "200" align="right" /> 
 RStudio addin to search CRAN packages titles and descriptions
