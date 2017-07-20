@@ -133,7 +133,7 @@ CRANsearcher <- function(){
         trimws
     })
 
-    search_d <- search %>% debounce(1000)
+    search_d <- search %>% debounce(500)
 
     a_sub2 <- reactive({
 
@@ -141,7 +141,7 @@ CRANsearcher <- function(){
 
       a <- a_sub1()
 
-      if(identical(search_d(), character(0)) || nchar(search_d())<3){
+      if(identical(search_d(), character(0)) || nchar(search_d())<2){
         s <- 0
       } else{
         s <- a %>%
@@ -158,7 +158,7 @@ CRANsearcher <- function(){
 
     output$table <- DT::renderDataTable({
 
-      if(identical(search_d(), character(0)) || nchar(search_d())<3){
+      if(identical(search_d(), character(0)) || nchar(search_d())<2){
         if(!is.null(crandb$a)){
           if (input$dates=="All time"){
             DT::datatable(crandb$a[c(1:10),c(1:6)],
@@ -201,7 +201,7 @@ CRANsearcher <- function(){
 
       note <- ifelse(!is.null(crandb$snapshot_date), paste0(" (as of ", crandb$snapshot_date,")", ""))
 
-      if(identical(search_d(), character(0)) || nchar(search_d())<3){
+      if(identical(search_d(), character(0)) || nchar(search_d())<2){
         if (!is.null(crandb$a)){
 
           if (input$dates=="All time"){
