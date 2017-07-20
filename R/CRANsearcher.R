@@ -125,19 +125,23 @@ CRANsearcher <- function(){
 
     })
 
-    a_sub2 <- reactive({
-
-      search <- input$search %>%
+    search <- reactive({
+      input$search %>%
         tolower %>%
         strsplit(.,",") %>%
         unlist %>%
         trimws
+    })
 
-      search2 <- search[which(nchar(search) >1)]
+    search_d <- search %>% debounce(1000)
+
+    a_sub2 <- reactive({
+
+      search2 <- search_d()[which(nchar(search_d()) >1)]
 
       a <- a_sub1()
 
-      if(nchar(input$search)<3){
+      if(identical(search_d(), character(0)) || nchar(search_d())<3){
         s <- 0
       } else{
         s <- a %>%
@@ -154,7 +158,7 @@ CRANsearcher <- function(){
 
     output$table <- DT::renderDataTable({
 
-      if(nchar(input$search)<3){
+      if(identical(search_d(), character(0)) || nchar(search_d())<3){
         if(!is.null(crandb$a)){
           if (input$dates=="All time"){
             DT::datatable(crandb$a[c(1:10),c(1:6)],
@@ -197,7 +201,7 @@ CRANsearcher <- function(){
 
       note <- ifelse(!is.null(crandb$snapshot_date), paste0(" (as of ", crandb$snapshot_date,")", ""))
 
-      if(nchar(input$search)<3){
+      if(identical(search_d(), character(0)) || nchar(search_d())<3){
         if (!is.null(crandb$a)){
 
           if (input$dates=="All time"){
@@ -213,15 +217,15 @@ CRANsearcher <- function(){
 
         if (!n==1){
           if (input$dates=="All time"){
-            paste0("There are ",n," packages related to '",input$search,"' on CRAN", note,".")
+            paste0("There are ",n," packages related to '",search_d(),"' on CRAN", note,".")
           } else {
-            paste0("There are ",n," packages related to '",input$search,"' on CRAN released within the past ",input$dates,note,".")
+            paste0("There are ",n," packages related to '",search_d(),"' on CRAN released within the past ",input$dates,note,".")
           }
         } else {
           if (input$dates=="All time"){
-            paste0("There is ",n," package related to '",input$search,"' on CRAN", note, ".")
+            paste0("There is ",n," package related to '",search_d(),"' on CRAN", note, ".")
           } else {
-            paste0("There is ",n," package related to '",input$search,"' on CRAN released within the past ",input$dates,note,".")
+            paste0("There is ",n," package related to '",search_d(),"' on CRAN released within the past ",input$dates,note,".")
           }
         }
       }
