@@ -93,7 +93,7 @@ CRANsearcher <- function(){
                                    '<sub> <a href="','http://rdrr.io/cran/',Package,'" style="color:#000000">',2,'</a></sub>')) %>%
            rename(`Last release`=Published)
 
-      crandb$snapshot_date <- format(Sys.Date(), "%m/%d/%y")
+      crandb$snapshot_date <- Sys.Date()
 
     } else {
       a <- cran_inventory %>%
@@ -106,7 +106,7 @@ CRANsearcher <- function(){
               rename(`Last release`=Published)
 
       crandb$a <- a
-      crandb$snapshot_date <- format(a$snapshot_date, "%m/%d/%y")
+      crandb$snapshot_date <- a$snapshot_date
 
     }
 
