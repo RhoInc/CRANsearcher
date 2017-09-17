@@ -252,6 +252,13 @@ CRANsearcher <- function(){
     observeEvent(input$close,{
       stopApp()
     })
+
+    observeEvent(input$export, {
+      CRANsearcher_export <<- a_sub2() %>%
+        mutate(Package = name) %>%
+        select(., -name)
+      stopApp()
+    })
   }
 
   viewer <- dialogViewer("Search packages in CRAN database based on keywords", width = 1200, height = 900)
