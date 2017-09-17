@@ -68,6 +68,9 @@ CRANsearcher <- function(){
     ),
     miniButtonBlock(
       div(textOutput("n"), style = "font-weight: bold")
+    ),
+    miniButtonBlock(
+      actionButton("export", "Export Filtered Results")
     )
 
   )
