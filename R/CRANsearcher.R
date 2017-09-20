@@ -68,8 +68,12 @@ CRANsearcher <- function(){
     ),
     miniButtonBlock(
       div(textOutput("n"), style = "font-weight: bold")
+    ),
+    miniButtonBlock(
+      shinyjs::disabled(
+        actionButton("export", "Export Filtered Results")
+      )
     )
-
   )
 
 
@@ -247,6 +251,19 @@ CRANsearcher <- function(){
     })
 
     observeEvent(input$close,{
+      stopApp()
+    })
+
+    observe({
+      if (a_sub2() != 0) {
+        shinyjs::enable("export")
+      }
+    })
+
+    observeEvent(input$export, {
+      CRANsearcher_export <<- a_sub2() %>%
+        mutate(Package = name) %>%
+        select(., -name)
       stopApp()
     })
   }
