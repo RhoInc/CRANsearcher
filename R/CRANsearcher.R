@@ -1,6 +1,6 @@
 # for R CMD check NOTE about global vars
 if(getRversion() >= "2.15.1")  utils::globalVariables(c(".", "Package","Published","name",
-                                                        "Title","Description","term","months_since",
+                                                        "Title","Description","term","months_since_release",
                                                         "snapshot_date","cran_inventory"))
 
 ## function to get packages
@@ -90,7 +90,7 @@ CRANsearcher <- function(){
       crandb$a <- getPackages() %>%
             data.frame %>%
             mutate(Published = as.Date(Published),
-                   months_since = lubridate::interval(Published, Sys.Date())/months(1),
+                   months_since_release = lubridate::interval(Published, Sys.Date())/months(1),
                    name = Package %>% as.character,
                   Package = paste0('<a href="','https://cran.r-project.org/web/packages/',Package,'" style="color:#000000">',Package,'</a>',
                                    '<sub> <a href="','http://www.rpackages.io/package/',Package,'" style="color:#000000">',1,'</a></sub>',
@@ -102,7 +102,7 @@ CRANsearcher <- function(){
     } else {
       a <- cran_inventory %>%
         mutate(Published = as.Date(Published),
-               months_since = lubridate::interval(Published, Sys.Date())/months(1),
+               months_since_release = lubridate::interval(Published, Sys.Date())/months(1),
                name = Package %>% as.character,
                Package =paste0('<a href="','https://cran.r-project.org/web/packages/',Package,'" style="color:#000000">',Package,'</a>',
                                '<sub> <a href="','http://www.rpackages.io/package/',Package,'" style="color:#000000">',1,'</a></sub>',
@@ -124,7 +124,7 @@ CRANsearcher <- function(){
       } else {
         nmos <- gsub("[^0-9\\.]", "", input$dates)
 
-        return(filter(dat, months_since < nmos))
+        return(filter(dat, months_since_release < nmos))
       }
 
     })
@@ -254,16 +254,15 @@ CRANsearcher <- function(){
       stopApp()
     })
 
-    observe({
-      if (a_sub2() != 0) {
+    observeEvent(a_sub2() != 0, {
         shinyjs::enable("export")
-      }
     })
 
     observeEvent(input$export, {
       CRANsearcher_export <<- a_sub2() %>%
         mutate(Package = name) %>%
-        select(., -name)
+        select(., -name) %>%
+        setNames(., tolower(gsub("\\.","_",names(.))))
       stopApp()
     })
   }
