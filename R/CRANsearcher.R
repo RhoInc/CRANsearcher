@@ -223,9 +223,7 @@ CRANsearcher <- function(){
           paste("")
         }
       } else{
-        validate(
-          need(a_sub2() != 0, "Your search returned no results. Please try again.")
-        )
+        req(a_sub2() != 0)
         n <- dim(a_sub2())[1]
 
         if (!n==1){
