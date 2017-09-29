@@ -205,6 +205,12 @@ CRANsearcher <- function(){
 
       note <- ifelse(!is.null(crandb$snapshot_date), paste0(" (as of ", crandb$snapshot_date,")", ""))
 
+      if (length(search_d())<=1){
+        pkg <- search_d()
+      } else {
+        pkg <- paste(search_d(), collapse= ", ")
+      }
+
       if(identical(search_d(), character(0)) || nchar(search_d())<2){
         if (!is.null(crandb$a)){
 
@@ -221,15 +227,15 @@ CRANsearcher <- function(){
 
         if (!n==1){
           if (input$dates=="All time"){
-            paste0("There are ",n," packages related to '",search_d(),"' on CRAN", note,".")
+            paste0("There are ",n," packages related to '",pkg,"' on CRAN", note,".")
           } else {
-            paste0("There are ",n," packages related to '",search_d(),"' on CRAN released within the past ",input$dates,note,".")
+            paste0("There are ",n," packages related to '",pkg,"' on CRAN released within the past ",input$dates,note,".")
           }
         } else {
           if (input$dates=="All time"){
-            paste0("There is ",n," package related to '",search_d(),"' on CRAN", note, ".")
+            paste0("There is ",n," package related to '",pkg,"' on CRAN", note, ".")
           } else {
-            paste0("There is ",n," package related to '",search_d(),"' on CRAN released within the past ",input$dates,note,".")
+            paste0("There is ",n," package related to '",pkg,"' on CRAN released within the past ",input$dates,note,".")
           }
         }
       }
