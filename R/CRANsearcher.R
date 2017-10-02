@@ -148,6 +148,7 @@ CRANsearcher <- function(){
       if(identical(search_d(), character(0)) || nchar(search_d())<2){
         s <- 0
       } else{
+
         s <- a %>%
           mutate(term = tolower(paste(name, Title, Description, sep=","))) %>%
           rowwise %>%
@@ -155,6 +156,8 @@ CRANsearcher <- function(){
           filter(match==TRUE) %>%
           select(-c(term, match)) %>%
           data.frame
+
+        if (nrow(s) == 0) s <- 0
       }
       return(s)
     })
@@ -189,6 +192,9 @@ CRANsearcher <- function(){
           return()
         }
       } else{
+        validate(
+          need(a_sub2() != 0, "Your search returned no results. Please try again.")
+        )
         DT::datatable(a_sub2()[,c(1:6)],
                        rownames = FALSE,
                        escape = FALSE,
@@ -223,6 +229,7 @@ CRANsearcher <- function(){
           paste("")
         }
       } else{
+        req(a_sub2() != 0)
         n <- dim(a_sub2())[1]
 
         if (!n==1){
