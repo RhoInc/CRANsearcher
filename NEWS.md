@@ -1,3 +1,7 @@
+# CRANsearcher 1.1.1
+- Added bug fix contributed via PR by [Eric Nantz](https://github.com/thercast) to accommodate zero search results.  
+- Fixed bug in message following search of multiple terms.
+
 # CRANsearcher 1.1.0
 
 - Added functionality courtesy of [Eric Nantz](https://github.com/thercast)'s pull request: ability to export filtered search results to a data frame in R environment
