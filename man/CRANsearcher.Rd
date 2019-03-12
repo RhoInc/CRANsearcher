@@ -4,7 +4,10 @@
 \alias{CRANsearcher}
 \title{CRANsearcher}
 \usage{
-CRANsearcher()
+CRANsearcher(viewer = NULL)
+}
+\arguments{
+\item{viewer}{Shiny app viewer options. Default is \code{dialogViewer("Search packages...", width = 1200, height = 900)}.}
 }
 \description{
 Addin for searching packages in CRAN database based on keywords

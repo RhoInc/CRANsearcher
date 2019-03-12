@@ -1,6 +1,6 @@
 Package: CRANsearcher
 Title: RStudio Addin for Searching Packages in CRAN Database Based on Keywords
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: c(
            person("Becca", "Krouse", email = "rebecca_krouse@rhoworld.com", role = c("aut")),
            person("Agustin", "Calatroni", email = "agustin_calatroni@rhoworld.com", role = c("cre","aut"))
@@ -20,6 +20,6 @@ Imports:
   DT,
   lubridate,
   utils
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 URL: https://github.com/RhoInc/CRANsearcher
 BugReports: https://github.com/RhoInc/CRANsearcher/issues
