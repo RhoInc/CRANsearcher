@@ -17,5 +17,5 @@ cran_inventory <- getPackages()
 cran_inventory <- data.frame(cran_inventory)
 cran_inventory$snapshot_date <- Sys.Date()
 
-devtools::use_data(cran_inventory, overwrite = TRUE)
+usethis::use_data(cran_inventory, overwrite = TRUE)
 
