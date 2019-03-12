@@ -22,6 +22,9 @@ getPackages <- function() {
 #' CRANsearcher
 #'
 #' Addin for searching packages in CRAN database based on keywords
+#'
+#' @param viewer Shiny app viewer options. Default is \code{dialogViewer("Search packages...", width = 1200, height = 900)}.
+#'
 #' @import dplyr
 #' @importFrom curl has_internet
 #' @import shiny
@@ -37,7 +40,7 @@ getPackages <- function() {
 #' }
 #'
 #' @export
-CRANsearcher <- function(){
+CRANsearcher <- function(viewer = NULL){
 
   ui <- miniPage(
     shinyjs::useShinyjs(),
@@ -79,45 +82,52 @@ CRANsearcher <- function(){
 
   server <- function(input, output, session){
 
-    crandb <- reactiveValues(a=NULL, snapshot_date=NULL)
 
-    observeEvent(!is.null(crandb$a),{
+    observeEvent(crandb(),{
       shinyjs::hide(id = "loading-content", anim = TRUE, animType = "fade")
     })
 
     # determine if internet access & manage data
-    if(curl::has_internet()){
-      crandb$a <- getPackages() %>%
+      crandb <- reactive({
+
+        out <- list()
+
+        if(curl::has_internet()){
+
+        out$a <- getPackages() %>%
             data.frame %>%
             mutate(Published = as.Date(Published),
                    months_since_release = lubridate::interval(Published, Sys.Date())/months(1),
                    name = Package %>% as.character,
-                  Package = paste0('<a href="','https://cran.r-project.org/web/packages/',Package,'" style="color:#000000">',Package,'</a>',
+                   Package = paste0('<a href="','https://cran.r-project.org/web/packages/',Package,'" style="color:#000000">',Package,'</a>',
+                                    '<sub> <a href="','http://www.rpackages.io/package/',Package,'" style="color:#000000">',1,'</a></sub>',
+                                    '<sub> <a href="','http://rdrr.io/cran/',Package,'" style="color:#000000">',2,'</a></sub>')) %>%
+            rename(`Last release`=Published)
+
+        out$snapshot_date <- Sys.Date()
+
+        } else {
+
+          out$a <- cran_inventory %>%
+            mutate(Published = as.Date(Published),
+                   months_since_release = lubridate::interval(Published, Sys.Date())/months(1),
+                   name = Package %>% as.character,
+                   Package =paste0('<a href="','https://cran.r-project.org/web/packages/',Package,'" style="color:#000000">',Package,'</a>',
                                    '<sub> <a href="','http://www.rpackages.io/package/',Package,'" style="color:#000000">',1,'</a></sub>',
                                    '<sub> <a href="','http://rdrr.io/cran/',Package,'" style="color:#000000">',2,'</a></sub>')) %>%
-           rename(`Last release`=Published)
+            rename(`Last release`=Published)
 
-      crandb$snapshot_date <- Sys.Date()
+          out$snapshot_date <- out$a$snapshot_date[1]
 
-    } else {
-      a <- cran_inventory %>%
-        mutate(Published = as.Date(Published),
-               months_since_release = lubridate::interval(Published, Sys.Date())/months(1),
-               name = Package %>% as.character,
-               Package =paste0('<a href="','https://cran.r-project.org/web/packages/',Package,'" style="color:#000000">',Package,'</a>',
-                               '<sub> <a href="','http://www.rpackages.io/package/',Package,'" style="color:#000000">',1,'</a></sub>',
-                               '<sub> <a href="','http://rdrr.io/cran/',Package,'" style="color:#000000">',2,'</a></sub>')) %>%
-              rename(`Last release`=Published)
+        }
 
-      crandb$a <- a
-      crandb$snapshot_date <- a$snapshot_date
-
-    }
+        return(out)
+    })
 
 
     a_sub1 <- reactive({
 
-      dat <- crandb$a
+      dat <- crandb()$a
 
       if(input$dates=="All time"){
         return(dat)
@@ -166,9 +176,9 @@ CRANsearcher <- function(){
     output$table <- DT::renderDataTable({
 
       if(identical(search_d(), character(0)) || nchar(search_d())<2){
-        if(!is.null(crandb$a)){
+        if(!is.null(crandb()$a)){
           if (input$dates=="All time"){
-            DT::datatable(crandb$a[c(1:10),c(1:6)],
+            DT::datatable(crandb()$a[c(1:10),c(1:6)],
                           rownames = FALSE,
                           escape = FALSE,
                           style="bootstrap",
@@ -209,7 +219,7 @@ CRANsearcher <- function(){
 
     output$n <- renderText({
 
-      note <- ifelse(!is.null(crandb$snapshot_date), paste0(" (as of ", crandb$snapshot_date,")", ""))
+     note <- ifelse(!is.null(crandb()$snapshot_date), paste0(" (as of ", crandb()$snapshot_date,")"), "")
 
       if (length(search_d())<=1){
         pkg <- search_d()
@@ -218,10 +228,10 @@ CRANsearcher <- function(){
       }
 
       if(identical(search_d(), character(0)) || nchar(search_d())<2){
-        if (!is.null(crandb$a)){
+        if (!is.null(crandb()$a)){
 
           if (input$dates=="All time"){
-          paste0("There are ",dim(crandb$a)[1]," packages on CRAN", note, ". Displaying first 10.")
+          paste0("There are ",dim(crandb()$a)[1]," packages on CRAN", note, ". Displaying first 10.")
           } else{
           paste0("There are ",dim(a_sub1())[1]," packages on CRAN released within the past ",input$dates,note,".")
           }
@@ -280,7 +290,9 @@ CRANsearcher <- function(){
     })
   }
 
-  viewer <- dialogViewer("Search packages in CRAN database based on keywords", width = 1200, height = 900)
+  if (is.null(viewer)){
+    viewer <- dialogViewer("Search packages in CRAN database based on keywords", width = 1200, height = 900)
+  }
   runGadget(ui, server, viewer = viewer)
 }
 
